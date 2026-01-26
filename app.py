@@ -10,7 +10,7 @@ st.write("Predict daily store sales")
 
 import urllib.request
 
-MODEL_URL = "https://huggingface.co/Pavithra64/Retail_sales_prediction/blob/main/random_forest_model.pkl"
+MODEL_URL = "https://huggingface.co/Pavithra64/Retail_sales_prediction/resolve/main/random_forest_model.pkl"
 MODEL_PATH = "random_forest_model.pkl"
 
 @st.cache_resource
@@ -20,9 +20,12 @@ def load_model():
             urllib.request.urlretrieve(MODEL_URL, MODEL_PATH)
     return joblib.load(MODEL_PATH)
 
-model = load_model()
+try:
+    model = load_model()
+except Exception:
+    st.error("❌ Model failed to load. Version mismatch or corrupted file.")
+    st.stop()
 
-print(model.feature_names_in_)
 
 # -------- Inputs --------
 dayofweek = st.selectbox("Day Of Week", [1,2,3,4,5,6,7])
@@ -89,3 +92,4 @@ input_data = pd.DataFrame({
 if st.button("Predict Sales"):
     prediction = model.predict(input_data)[0]
     st.success(f"📈 Predicted Sales: {int(prediction):,}")
+
