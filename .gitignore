@@ -1,0 +1,6 @@
+*.pkl
+*.joblib
+*.csv
+*.zip
+__pycache__/
+.env
